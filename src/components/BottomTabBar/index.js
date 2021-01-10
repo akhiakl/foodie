@@ -1,19 +1,11 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, View } from 'react-native';
 import {
-  BottomNavigation, BottomNavigationTab, Button, Divider, Icon,
+  BottomNavigation, BottomNavigationTab, Button, Divider, Icon, withStyles,
 } from '@ui-kitten/components';
 
-const PersonIcon = (props) => (
-  <Icon {...props} name="person-outline" />
-);
-
-const BellIcon = (props) => (
-  <Icon {...props} name="bell-outline" />
-);
-
-const EmailIcon = (props) => (
-  <Icon {...props} name="email-outline" />
+const HomeIcon = (props) => (
+  <Icon {...props} name="home" />
 );
 const SettingsIcon = (props) => (
   <Icon {...props} name="settings" />
@@ -22,41 +14,84 @@ const CameraIcon = (props) => (
   <Icon {...props} name="camera" />
 );
 
-const BottomTabBar = ({ navigation, state }) => (
-  <>
-    <Divider />
-    <BottomNavigation
-      selectedIndex={state.index}
-      appearance="noIndicator"
-      onSelect={(index) => navigation.navigate(state.routeNames[index])}
-    >
-      <BottomNavigationTab icon={PersonIcon} />
-      <BottomNavigationTab icon={BellIcon} />
-      <View style={{ position: 'relative' }}>
-        <View style={{
+const BottomTabBar = ({ navigation, state, eva }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const navigateTo = (index) => {
+    if (index !== 1) {
+      navigation.navigate(state.routeNames[index > 1 ? index - 1 : index]);
+      setSelectedIndex(index);
+    }
+  };
+
+  const openCamera = () => {
+    navigation.navigate('Camera');
+  };
+
+  return (
+    <>
+      <Divider />
+      {Platform.OS === 'android'
+      && (
+      <View
+        style={{
           position: 'absolute',
+          zIndex: 123,
           bottom: 10,
-          left: -10,
-          backgroundColor: '#fafafa',
+          left: '50%',
+          transform: [{
+            translateX: -36,
+          }],
+          backgroundColor: eva.theme['background-basic-color-1'],
           padding: 10,
           borderRadius: 100,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        >
-          <Button
-            appearance="filled"
-            shape="rounded"
-            accessoryLeft={CameraIcon}
-            onPress={() => {}}
-          />
-        </View>
+      >
+        <Button
+          shape="rounded"
+          onPress={openCamera}
+          accessoryLeft={CameraIcon}
+        />
       </View>
-      <BottomNavigationTab icon={EmailIcon} />
-      <BottomNavigationTab icon={SettingsIcon} />
-    </BottomNavigation>
-  </>
-);
+      )}
+      <BottomNavigation
+        selectedIndex={selectedIndex}
+        appearance="noIndicator"
+        onSelect={navigateTo}
+      >
+        <BottomNavigationTab icon={HomeIcon} />
+        <BottomNavigationTab
+          title={(evaProps) => Platform.OS !== 'android' && (
+          <View
+            {...evaProps}
+            style={{
+              position: 'absolute',
+              zIndex: 123,
+              bottom: 10,
+              left: 20,
+              backgroundColor: eva.theme['background-basic-color-1'],
+              padding: 10,
+              borderRadius: 100,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Button
+              shape="rounded"
+              onPress={openCamera}
+              accessoryLeft={CameraIcon}
+            />
+          </View>
+          )}
+        />
+        <BottomNavigationTab icon={SettingsIcon} />
+      </BottomNavigation>
+    </>
+  );
+};
 
-export default BottomTabBar;
+export default withStyles(BottomTabBar);
