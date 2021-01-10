@@ -1,0 +1,41 @@
+{
+  "components": {
+    "Button": {
+      "meta": {
+        "parameters": {
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          }
+        },
+        "variantGroups": {
+          "shape": {
+            "rounded": {
+              "default": false
+            }
+          }
+        }
+      },
+      "appearances": {
+        "filled": {
+          "mapping": {},
+          "variantGroups": {
+            "shape": {
+              "rounded": {
+                "width": 72,
+                "height": 72,
+                "iconWidth": 32,
+                "iconHeight": 32,
+                "borderRadius": 36,
+                "paddingHorizontal": 0,
+                "paddingVertical": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
