@@ -7,12 +7,13 @@ import {
   Layout, Text, TopNavigation,
 } from '@ui-kitten/components';
 import HomeScreen from '../screens/Home';
-import DetailsScreen from '../screens/Details';
+import CameraScreen from '../screens/Camera';
 import BottomTabBar from '../components/BottomTabBar';
 import SettingsScreen from '../screens/Settings';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const HomeStack = createStackNavigator();
+const RootStack = createStackNavigator();
 
 const NotificationScreen = () => (
   <SafeAreaView style={{ flex: 1 }}>
@@ -30,24 +31,31 @@ const OrdersScreen = () => (
   </SafeAreaView>
 );
 
-const HomeNavigator = () => (
-  <Stack.Navigator headerMode="none">
-    <Stack.Screen name="Home" component={HomeScreen} />
-    <Stack.Screen name="Details" component={DetailsScreen} />
-  </Stack.Navigator>
+const BlogNavigator = () => (
+  <HomeStack.Navigator headerMode="none">
+    <HomeStack.Screen name="Home" component={HomeScreen} />
+  </HomeStack.Navigator>
 );
 const TabNavigator = () => (
-  <Tab.Navigator tabBar={(props) => <BottomTabBar {...props} />}>
-    <Tab.Screen name="Users" component={HomeNavigator} />
-    <Tab.Screen name="Notification" component={NotificationScreen} />
-    <Tab.Screen name="Orders" component={OrdersScreen} />
+  <Tab.Navigator sceneContainerStyle={{ position: 'relative', zIndex: 123 }} tabBar={(props) => <BottomTabBar {...props} />}>
+    <Tab.Screen name="Blog" component={BlogNavigator} />
     <Tab.Screen name="Settings" component={SettingsScreen} />
   </Tab.Navigator>
+);
+const RootStackScreen = () => (
+  <RootStack.Navigator mode="modal" headerMode="none">
+    <RootStack.Screen
+      name="Main"
+      component={TabNavigator}
+      options={{ headerShown: false }}
+    />
+    <RootStack.Screen name="Camera" component={CameraScreen} />
+  </RootStack.Navigator>
 );
 
 const AppNavigator = () => (
   <NavigationContainer>
-    <TabNavigator />
+    <RootStackScreen />
   </NavigationContainer>
 );
 export default AppNavigator;
