@@ -1,25 +1,39 @@
+import { Appearance } from 'react-native';
 import { createSlice } from '@reduxjs/toolkit';
+
+const colorScheme = Appearance.getColorScheme();
 
 export const THEME = {
   DARK: 'dark',
   LIGHT: 'light',
-  // DEVICE: "device",
+  SYSTEM: 'system',
 };
 
 export const themeSlice = createSlice({
   name: 'theme',
   initialState: {
-    theme: THEME.LIGHT,
+    name: THEME.SYSTEM,
+    scheme: colorScheme,
+    currSystemScheme: colorScheme,
   },
   reducers: {
-    toggleTheme: (state) => {
-      state.theme = state.theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT;
+    setTheme: (state, { payload }) => {
+      state.name = payload;
+      state.scheme = payload === THEME.SYSTEM ? state.currSystemScheme : payload;
+    },
+    changeSystemScheme: (state, { payload }) => {
+      console.log(state, payload);
+      state.currSystemScheme = payload;
+      if (state.name === THEME.SYSTEM) {
+        state.scheme = payload;
+      }
     },
   },
 });
 
-export const { toggleTheme } = themeSlice.actions;
+export const { setTheme, changeSystemScheme } = themeSlice.actions;
 
-export const selectTheme = (state) => state.theme.theme;
+export const getThemeName = (state) => (state.theme.name);
+export const getColorScheme = (state) => (state.theme.scheme);
 
 export default themeSlice.reducer;
